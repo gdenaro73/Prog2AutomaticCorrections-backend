@@ -21,15 +21,16 @@ public class myCompiler {
 	 
 	private static final Logger LOG = Logger.getLogger(myCompiler.class);
 	
+	
 	public File compileOutputDir;
 	@SuppressWarnings("rawtypes")
 	private List<Diagnostic> compilationErrors = new ArrayList<>();	
 	private String LibDirPath;
 	private String compilerOutputPrexif;
-	 
+	
 	
 	@Autowired
-    public myCompiler(@Value("${compile.dir.lib}") String LibDirPath, 
+    public myCompiler(String LibDirPath, 
     				  @Value("${upload.dir.compiled}") String compilerOutputPrexif) {
         this.LibDirPath = LibDirPath;
         this.compilerOutputPrexif = compilerOutputPrexif;
@@ -114,10 +115,16 @@ public class myCompiler {
 	     */
 	    private static String buildClassPath(String... paths) {
 	        StringBuilder sb = new StringBuilder();
+	        
+	       System.out.println("Cosa arriva a buildClassPath?" + paths.toString());
+	       
 	        for (String path : paths) {
 	            if (path.endsWith("*")) {
 	                path = path.substring(0, path.length() - 1);
+	                System.out.println("Path in buildClass: " + path);
 	                File pathFile = new File(path);
+	                System.out.println("Pathfile buildClass: " + pathFile.toString());
+	                System.out.println("ListFiles: " + pathFile.listFiles());
 	                // TODO pathFile can be null if no lib folder is given
 	                for (File file : pathFile.listFiles()) {
 	                    if (file.isFile() && file.getName().endsWith(".jar")) {
@@ -134,7 +141,7 @@ public class myCompiler {
 	       
 	        return sb.toString();
 	    }
-	    
+	    	    
 	    
 	    
 	    private List<File> getFiles(String FolderPath) {

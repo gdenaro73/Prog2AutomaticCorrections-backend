@@ -50,6 +50,7 @@ public class StudentUploadController {
 	@Value("${upload.dir.compiled}")
 	private String compileOutputPrefix;
 	
+	//compileLibDirPath e runLibDirPath per un artifact WAR devono essere modificati
 /**
  * Recive zip file with student task
  * @param inputFile: uploaded file recived in post request
@@ -59,9 +60,9 @@ public class StudentUploadController {
 	
 	private static final Logger LOG = Logger.getLogger(StudentUploadController.class);
 	
-	@RequestMapping(value = "/upload/student" ,method = RequestMethod.POST) 
-	public FeedbackResponse uploadFiles(@RequestParam("file") MultipartFile inputFile, @RequestParam("assignmentID") String assignmentID,
-								  @RequestParam("studentID") String studentID) 
+		@RequestMapping(value = "/upload/student" ,method = RequestMethod.POST) 
+		public FeedbackResponse uploadFiles(@RequestParam("file") MultipartFile inputFile, @RequestParam("assignmentID") String assignmentID,
+									  @RequestParam("studentID") String studentID) 
 			throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 			
 			FeedbackResponse feedbackResponse;
@@ -69,6 +70,12 @@ public class StudentUploadController {
 			String assignmentFolderPath = parentDir + File.separator + folderNamePrefix + assignmentID; // /temp/assignment_01
 			String folderStudentPath = assignmentFolderPath + File.separator + folderStudentPrefix + studentID; // /temp/assigment_01/consegna_200
 			new File(folderStudentPath).mkdir();
+			
+			//recupero path compile e run lib per WAR artifact
+			String compileLibDirPathWAR = Thread.currentThread().getContextClassLoader().getResource("compilelib").getPath();
+			compileLibDirPathWAR = compileLibDirPathWAR + File.separator + '*';
+			System.out.println("Nuovo path libdir runtime: " + compileLibDirPathWAR);
+			String runLibDirPathWAR = Thread.currentThread().getContextClassLoader().getResource("runlib").getPath();
 			
 			//take zip file, unzipping to correct folder
 			File correctionFile = new File(folderStudentPath, String.valueOf(UUID.randomUUID())); // UUID to keep this file name unique
@@ -78,12 +85,12 @@ public class StudentUploadController {
 			
 			//compile student e teacher files
 			LOG.debug("Compile...");
-			myCompiler mC = new myCompiler(compileLibDirPath,compileOutputPrefix);
+			myCompiler mC = new myCompiler(compileLibDirPathWAR,compileOutputPrefix);
 			mC.compile(assignmentFolderPath, correctionFolderName,folderStudentPrefix, studentID);
 			
 			//run checker and return feedback
 			LOG.debug("Run check...");
-			RunUtil mJU = new RunUtil(runLibDirPath);	
+			RunUtil mJU = new RunUtil(runLibDirPathWAR);	
 			feedbackResponse = mJU.runCorrection(folderStudentPath, mC.getCompileOutputDir());
 			
 			//delete studente and compiled files
