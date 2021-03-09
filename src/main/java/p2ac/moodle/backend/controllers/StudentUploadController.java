@@ -1,8 +1,8 @@
-package com.prog2.automaticCorrections.controllers;
+package p2ac.moodle.backend.controllers;
 
 
-import com.prog2.automaticCorrections.models.FeedbackResponse;
-import com.prog2.automaticCorrections.utilis.*;
+import p2ac.moodle.backend.models.FeedbackResponse;
+import p2ac.moodle.backend.utilis.*;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,11 +72,11 @@ public class StudentUploadController {
 			new File(folderStudentPath).mkdir();
 			
 			//recupero path compile e run lib per WAR artifact
-			String compileLibDirPathWAR = Thread.currentThread().getContextClassLoader().getResource("compilelib").getPath();
+			/*String compileLibDirPathWAR = Thread.currentThread().getContextClassLoader().getResource("compilelib").getPath();
 			compileLibDirPathWAR = compileLibDirPathWAR + File.separator + '*';
 			System.out.println("Nuovo path libdir runtime: " + compileLibDirPathWAR);
 			String runLibDirPathWAR = Thread.currentThread().getContextClassLoader().getResource("runlib").getPath();
-			
+			*/
 			//take zip file, unzipping to correct folder
 			File correctionFile = new File(folderStudentPath, String.valueOf(UUID.randomUUID())); // UUID to keep this file name unique
 	        inputFile.transferTo(correctionFile);
@@ -85,12 +85,12 @@ public class StudentUploadController {
 			
 			//compile student e teacher files
 			LOG.debug("Compile...");
-			myCompiler mC = new myCompiler(compileLibDirPathWAR,compileOutputPrefix);
+			myCompiler mC = new myCompiler(compileLibDirPath/*WAR*/,compileOutputPrefix);
 			mC.compile(assignmentFolderPath, correctionFolderName,folderStudentPrefix, studentID);
 			
 			//run checker and return feedback
 			LOG.debug("Run check...");
-			RunUtil mJU = new RunUtil(runLibDirPathWAR);	
+			RunUtil mJU = new RunUtil(runLibDirPath/*WAR*/);	
 			feedbackResponse = mJU.runCorrection(folderStudentPath, mC.getCompileOutputDir());
 			
 			//delete studente and compiled files

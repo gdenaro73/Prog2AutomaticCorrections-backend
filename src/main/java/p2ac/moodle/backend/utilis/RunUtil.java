@@ -1,4 +1,4 @@
-package com.prog2.automaticCorrections.utilis;
+package p2ac.moodle.backend.utilis;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -19,11 +19,10 @@ import org.junit.runner.notification.RunListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.prog2.automaticCorrections.models.FeedbackResponse;
-
 import checkers.helpers.Checker;
 import checkers.helpers.ISourceParsingChecker;
 import main.CheckSchedule;
+import p2ac.moodle.backend.models.FeedbackResponse;
 
 
 public class RunUtil {

@@ -1,4 +1,4 @@
-package com.prog2.automaticCorrections.models;
+package p2ac.moodle.backend.models;
 
 /**
  * @author benedettoraviotta

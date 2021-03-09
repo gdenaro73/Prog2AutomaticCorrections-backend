@@ -1,4 +1,4 @@
-package com.prog2.automaticCorrections.utilis;
+package p2ac.moodle.backend.utilis;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
