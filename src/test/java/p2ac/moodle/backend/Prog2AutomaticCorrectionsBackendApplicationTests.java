@@ -1,4 +1,4 @@
-package com.prog2.automaticCorrections;
+package p2ac.moodle.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
